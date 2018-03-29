@@ -53,6 +53,9 @@ void rwUSB(hid_device *device) {
 
 	unsigned char p1 = buf[10];
 	unsigned char p2 = buf[11];
+	int msb = 0;
+	int lsb = 0;
+	int remainPersent = 0;
 	float volt = 0;
 	int i = 0;
 
@@ -88,9 +91,13 @@ void rwUSB(hid_device *device) {
 		}
 
 		if(buf[0] == 0x37) {
-			potentiometerValue = (buf[1]<<2) + ((buf[2]&0xF0)>>2);
+			//- potentiometerValue = (buf[1]<<2) + ((buf[2]&0xF0)>>2);
+			lsb = buf[1];
+			msb = buf[2]<<8;
+			potentiometerValue = msb + lsb;
 			buf[1] = 0x81;
 		
+			printf("msb = %d, lsb = %d\n", msb, lsb);
 			printf("potentiometerValue = %d\n", potentiometerValue);
 		}
 
